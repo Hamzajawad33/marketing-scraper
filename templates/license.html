@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>License Activation - Nebula Crest</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        :root {
+            --bg-deep: #050510;
+            --accent-purple: #8b5cf6;
+            --accent-blue: #3b82f6;
+            --accent-green: #10b981;
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --font-main: 'Outfit', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-primary);
+            font-family: var(--font-main);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .auth-container {
+            position: relative;
+            z-index: 10;
+            width: 90%;
+            max-width: 500px;
+        }
+
+        .auth-card {
+            background: rgba(20, 20, 40, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+        }
+
+        .logo-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo-section i {
+            font-size: 48px;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .logo-section h1 {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .logo-section p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+
+        input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 14px 15px 14px 45px;
+            border-radius: 12px;
+            color: #fff;
+            font-family: var(--font-main);
+            font-size: 15px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent-purple);
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-primary {
+            width: 100%;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+            color: white;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(139, 92, 246, 0.4);
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .license-info {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .license-info h3 {
+            font-size: 14px;
+            color: var(--accent-blue);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .license-type {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .license-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-dev {
+            background: rgba(139, 92, 246, 0.2);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            color: var(--accent-purple);
+        }
+
+        .badge-client {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--accent-green);
+        }
+
+        .license-format {
+            color: var(--text-secondary);
+            font-size: 12px;
+            margin-top: 8px;
+            font-family: 'Courier New', monospace;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .loading {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="canvas-container"></div>
+
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="logo-section">
+                <i class="fa-solid fa-key"></i>
+                <h1>NEBULA CREST</h1>
+                <p>Enter your license key to activate</p>
+            </div>
+
+            <div class="license-info">
+                <h3><i class="fa-solid fa-circle-info"></i> License Types</h3>
+                <div class="license-type">
+                    <div class="license-badge badge-dev">
+                        <i class="fa-solid fa-code"></i> Developer License
+                    </div>
+                    <div class="license-badge badge-client">
+                        <i class="fa-solid fa-users"></i> Client License
+                    </div>
+                </div>
+                <div class="license-format">
+                    Format: XXXX-XXXX-XXXX-XXXX-XXXX
+                </div>
+            </div>
+
+            <div class="error-message" id="error-message"></div>
+
+            <form id="license-form">
+                <div class="form-group">
+                    <label>License Key</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <input type="text" id="license_key" required placeholder="XXXX-XXXX-XXXX-XXXX-XXXX"
+                            maxlength="29">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary">
+                    <i class="fa-solid fa-unlock"></i> Activate License
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script type="module" src="/static/js/galaxy.js"></script>
+    <script>
+        const licenseInput = document.getElementById('license_key');
+
+        // Auto-format license key input
+        licenseInput.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+            let formatted = '';
+
+            for (let i = 0; i < value.length && i < 20; i++) {
+                if (i > 0 && i % 4 === 0) {
+                    formatted += '-';
+                }
+                formatted += value[i];
+            }
+
+            e.target.value = formatted;
+        });
+
+        // Form submission
+        document.getElementById('license-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const licenseKey = document.getElementById('license_key').value;
+            const errorMsg = document.getElementById('error-message');
+            const submitBtn = document.querySelector('.btn-primary');
+
+            // Validate format
+            if (licenseKey.length !== 24) {
+                errorMsg.textContent = 'Invalid license key format';
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            submitBtn.classList.add('loading');
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Activating...';
+
+            try {
+                const response = await fetch('/activate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ license_key: licenseKey })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    submitBtn.innerHTML = '<i class="fa-solid fa-check"></i> Activated!';
+                    submitBtn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+                    setTimeout(() => {
+                        window.location.href = data.redirect;
+                    }, 800);
+                } else {
+                    errorMsg.textContent = data.error;
+                    errorMsg.style.display = 'block';
+                    submitBtn.classList.remove('loading');
+                    submitBtn.innerHTML = '<i class="fa-solid fa-unlock"></i> Activate License';
+                }
+            } catch (error) {
+                errorMsg.textContent = 'Connection error. Please try again.';
+                errorMsg.style.display = 'block';
+                submitBtn.classList.remove('loading');
+                submitBtn.innerHTML = '<i class="fa-solid fa-unlock"></i> Activate License';
+            }
+        });
+    </script>
+</body>
+
+</html>
