@@ -32,5 +32,5 @@ COPY . /app/
 # Expose port
 EXPOSE $PORT
 
-# Run gunicorn
-CMD gunicorn --bind 0.0.0.0:$PORT wsgi:app
+# Run gunicorn with 1 worker to save memory (critical for free tier)
+CMD gunicorn --workers 1 --threads 8 --timeout 0 --bind 0.0.0.0:$PORT wsgi:app
